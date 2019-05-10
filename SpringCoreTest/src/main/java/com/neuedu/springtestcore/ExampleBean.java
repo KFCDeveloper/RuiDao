@@ -1,9 +1,9 @@
 package com.neuedu.springtestcore;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import org.apache.ibatis.io.Resources;
+
+import java.io.IOException;
+import java.util.*;
 
 public class ExampleBean {
     private int years = 4000;
@@ -15,11 +15,16 @@ public class ExampleBean {
     //第一个是String 第二个什么都可以
     private Map<String,String>map;
 
+    private Properties p;
 //    public ExampleBean(int years, String ultimateAnswer) {
 //        this.years = years;
 //        this.ultimateAnswer = ultimateAnswer;
 //    }
 
+
+    public void setP(Properties p) {
+        this.p = p;
+    }
 
     public void setList(List<String> list) {
         this.list = list;
@@ -64,5 +69,26 @@ public class ExampleBean {
             System.out.println(entry.getKey()+"\t"+entry.getValue());
         }
 
+        //use properties to load file with extension name of properties
+        p = new Properties();
+        try {
+            p.load(Resources.getResourceAsStream("db.properties"));
+
+            System.out.println(p.get("driver"));
+            System.out.println(p.get("url"));
+            System.out.println(p.get("username"));
+            System.out.println(p.get("password"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //iterate all the properties
+        //properties 和 map 差不多，都是键值对
+        Set<Map.Entry<Object,Object>> entriesP = p.entrySet();
+        Iterator<Map.Entry<Object,Object>> it2P = entriesP.iterator();
+        while (it2P.hasNext()){
+            Map.Entry<Object,Object>entry = it2P.next();
+            System.out.println(entry.getKey()+"\t"+entry.getValue());
+        }
     }
 }

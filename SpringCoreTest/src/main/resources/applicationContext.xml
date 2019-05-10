@@ -41,7 +41,17 @@
         <!--<constructor-arg name="years" value="750000000" />-->
         <!--<constructor-arg name="ultimateAnswer" value="42" />-->
     <!--</bean>-->
+
+    <!--property注入，collection注入，普通参数注入-->
     <bean id="exampleBean" class="com.neuedu.springtestcore.ExampleBean" p:years="750000000" p:ultimateAnswer="42">
+        <property name="p">
+            <props>
+                <prop key="driver">com.mysql.jdbc.Driver</prop>
+                <prop key="url">jdbc:mysql://localhost:3306/scott</prop>
+                <prop key="username">root</prop>
+                <prop key="password">root</prop>
+            </props>
+        </property>
         <property name="list">
             <list>
                 <value>str1</value>
