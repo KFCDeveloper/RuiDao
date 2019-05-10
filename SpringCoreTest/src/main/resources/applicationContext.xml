@@ -34,4 +34,10 @@
     <bean id="testBean2Factory" class="com.neuedu.springtestcore.TestBean2Factory"/>
     <!-- register testbean2 -->
     <bean id="testBean2" factory-bean="testBean2Factory" factory-method="getInstance" scope="prototype"/>
+
+
+    <bean id="exampleBean" class="com.neuedu.springtestcore.ExampleBean">
+        <constructor-arg name="years" value="750000000" />
+        <constructor-arg name="ultimateAnswer" value="42" />
+    </bean>
 </beans>
