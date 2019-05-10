@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neuedu.model.mapper.DeptMapper">
+    <!--<select id="selectDept" resultType="com.neuedu.model.po.Dept">-->
+    <!--select * from dept where deptno = #{deptno}-->
+    <!--</select>-->
+    <select id="selectDept" parameterType="int" resultType="Dept">
+        select *
+        from dept
+        where deptno = #{deptno}
+    </select>
+    <select id="selectAllDept" resultType="Dept">
+        select *
+        from dept
+    </select>
+    <select id="selectDeptByName" resultType="Dept">
+        #         select *
+        #         from dept
+        #         where dname like "%"#{dname}"%"
+
+        select *
+        from dept
+        where dname like concat('%', #{dname}, '%')
+
+        #         select *
+        #         from dept
+        #         where dname like '%${dname}%'
+        #         这样写的话，就算只有一个参数也一定要写 @Para
+    </select>
+    <select id="selectDeptByNameAndLoc" resultType="Dept">
+        select *
+        from dept
+        where dname = #{dname}
+          and loc = #{loc}
+    </select>
+    <insert id="addDept">
+        insert into dept
+        values (#{deptno}, #{dname}, #{loc})
+    </insert>
+
+    <select id="getSalgrade" resultMap="_salgrade">
+        select *
+        from salgrade
+        where grade = #{grade}
+    </select>
+    <resultMap type="Salgrade" id="_salgrade">
+        <result column="losal" property="lowsal"/>
+        <result column="hisal" property="highsal"/>
+    </resultMap>
+
+    <!--One to Many-->
+    <select id="getDept" resultMap="_dept">
+        select *
+        from dept as d,
+             emp as e
+        where d.deptno = e.deptno
+          and d.deptno = #{deptno}
+    </select>
+    <!--resultMap的type就是返回值-->
+    <resultMap id="_dept" type="Dept">
+        <id property="deptno" column="deptno" />
+        <result property="dname" column="dname" />
+        <result property="loc" column="loc" />
+        <!--这里要写ofType 表示List中的类型-->
+        <collection property="emps" ofType="Emp">
+            <id property="empno" column="empno" />
+            <result property="ename" column="ename" />
+            <result property="job" column="job" />
+            <result property="mgr" column="mgr" />
+            <result property="hiredate" column="hiredate" />
+            <result property="sal" column="sal" />
+            <result property="comm" column="comm" />
+        </collection>
+    </resultMap>
+
+    <select id="getDepts" resultMap="_dept">
+        select *
+        from dept as d,
+             emp as e
+        where d.deptno = e.deptno
+    </select>
+
+    <!--懒加载，当java中查找Dept的时候只允许第一个，当要Emp时才会运行下面的查找emp-->
+    <!--settings中需要修改-->
+    <select id="getDeptLazy" resultMap="deptlazy">
+        select * from dept where deptno= #{deptno}
+    </select>
+    <resultMap id="deptlazy" type="Dept">
+        <collection property="emps" ofType="Emp" column="deptno" select="getemp"/> <!--可以认为是这个collecition使用select查找后的结果代替-->
+    </resultMap>
+    <select id="getemp" resultType="Emp">
+        select * from emp where deptno= #{deptno}
+    </select>
+
+    <select id="getDeptLazyAll" resultMap="deptlazy">
+        select * from dept
+    </select>
+
+</mapper>

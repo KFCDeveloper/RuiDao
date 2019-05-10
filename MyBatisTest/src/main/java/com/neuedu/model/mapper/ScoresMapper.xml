@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neuedu.model.mapper.ScoresMapper">
+
+    <!--Many to Many-->
+    <select id="getStudentById" resultMap="_student">
+        select s.sid,s.sname,c.cid,c.cname,ss.score
+        from student s,course c,scores ss
+        where s.sid = ss.sid
+        and c.cid = ss.cid
+        and s.sid = #{sid}
+    </select>
+    <resultMap id="_student" type="Student">
+        <id property="sid" column="sid" />
+        <result property="sname" column="sname" />
+        <collection property="scores" ofType="Scores">
+            <id property="id" column="id" />
+            <!--数据库中的字段不需要都映射上，按需映射，如果映射了下方的两个字段，在Entity中找不到，会报错的-->
+            <!--<result property="sid" column="sid" />-->
+            <!--<result property="cid" column="cid" />-->
+            <result property="score" column="score" />
+            <!--association 一般都会使用javaType collection一般都是使用的ofType-->
+            <association property="c" javaType="Course">
+                <id property="cid" column="cid" />
+                <result property="cname" column="cname" />
+            </association>
+        </collection>
+    </resultMap>
+
+</mapper>

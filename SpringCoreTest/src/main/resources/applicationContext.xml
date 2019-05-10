@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!-- bean refers to Class which expect Spring to create instance, manage their dependencies -->
+
+
+    <!--使用前一个bean进行初始化，是使用的bean的构造方法进行，在Spring IOC容器一初始化的时候就会将这个bean初始化，可以看见调用了构造方法-->
+    <!--采用延迟加载Bean, 直到第一次使用getBean()方法获取Bean实例时，才会创建Bean-->
+    <!--<bean id="testDAO" class="com.neuedu.springtestcore.TestDAO">-->
+    <!--</bean>-->
+    <bean id="testDAO" class="com.neuedu.springtestcore.TestDAO" lazy-init="true">
+
+    </bean>
+    <bean id="userDAO" class="com.neuedu.springtestcore.UserDAO" lazy-init="true">
+
+    </bean>
+
+    <!--尝试一下两种-->
+    <!--<bean id="testService" class="com.neuedu.springtestcore.TestService" scope="prototype">-->
+    <bean id="testService" class="com.neuedu.springtestcore.TestService">
+        <!--有两种注入方式，通过setter或者通过构造方法，第一种property是setter注入，第二种是通过constructor注入-->
+        <!--<property name="testDAO" ref="testDAO"/>-->
+        <constructor-arg ref="testDAO" />
+        <constructor-arg ref="userDAO" />
+    </bean>
+
+    <!--define a factory method for spring to use to create a instance-->
+    <bean id="testBean" class="com.neuedu.springtestcore.TestBean" factory-method="getInstance">
+    </bean>
+
+    <!--factory-method有两种，一种是singleton另一种是prototype，默认是singleton-->
+    <!-- register factory bean -->
+    <bean id="testBean2Factory" class="com.neuedu.springtestcore.TestBean2Factory"/>
+    <!-- register testbean2 -->
+    <bean id="testBean2" factory-bean="testBean2Factory" factory-method="getInstance" scope="prototype"/>
+</beans>

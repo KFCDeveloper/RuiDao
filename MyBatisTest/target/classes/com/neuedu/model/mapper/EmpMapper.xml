@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neuedu.model.mapper.EmpMapper">
+    <!--<select id="selectDept" resultType="com.neuedu.model.po.Dept">-->
+    <!--select * from dept where deptno = #{deptno}-->
+    <!--</select>-->
+    <insert id="addEmp">
+        insert into emp
+        values (#{empno}, #{ename}, #{job}, #{mgr}, #{hiredate}, #{sal}, #{comm}, #{deptno})
+    </insert>
+
+    <insert id="addEmp2" useGeneratedKeys="true" keyProperty="empno">
+        insert into emp
+        values (null, #{ename}, #{job}, #{mgr}, #{hiredate}, #{sal}, #{comm}, #{deptno})
+    </insert>
+
+    <update id="updateEmp">
+        update emp
+        set sal = #{sal}
+        where empno = #{empno}
+    </update>
+    <!--<delete id="deleteEmp">-->
+    <!--delete-->
+    <!--from emp-->
+    <!--where empno = #{empno}-->
+    <!--</delete>-->
+    <select id="getInfoByEmpno" resultType="hashmap">
+        select ename, job
+        from emp
+        where empno = #{empno}
+    </select>
+
+    <sql id="fromemp">
+        from emp where empno =
+        ${empno}
+    </sql>
+
+    <delete id="deleteEmp">
+        delete
+        <include refid="fromemp">
+            <property name="empno" value="#{empno}"/>
+        </include>
+
+    </delete>
+
+    <!--这里的列名和表名都必须使用$符号，但是$符号也容易被注入-->
+    <!--select * from emp where ? = ?-->
+    <!--${} string substitution-->
+    <!--don't write like '${value}', SQL injection-->
+    <select id="FindByColumn" resultType="Emp">
+        select *
+        from emp
+        where ${column} = #{value}
+    </select>
+
+    <select id="getInfos" resultType="hashMap">
+        select e.*, d.dname, d.loc
+        from emp e,
+             dept d
+        where e.deptno = d.deptno
+    </select>
+
+    <!--Many to One-->
+    <select id="getEmpInfoByEmpno" resultMap="_emp">
+        select e.*, d.dname, d.loc
+        from dept as d,
+             emp as e
+        where d.deptno = e.deptno
+          and e.empno = #{empno}
+    </select>
+    <!--property对应的java bean-->
+    <resultMap id="_emp" type="Emp">
+        <id property="empno" column="empno"/>
+        <result property="ename" column="ename"/>
+        <result property="job" column="job"/>
+        <result property="mgr" column="mgr"/>
+        <result property="hiredate" column="hiredate"/>
+        <result property="sal" column="sal"/>
+        <result property="comm" column="comm"/>
+        <association property="d" javaType="Dept">
+            <id property="deptno" column="deptno"/>
+            <result property="dname" column="dname"/>
+            <result property="loc" column="loc"/>
+        </association>
+
+    </resultMap>
+
+    <!--Many to One-->
+    <select id="getEmpInfoByEmpnoLazy" resultMap="_emplazy">
+        select *
+        from emp as e
+        where e.empno = #{empno}
+    </select>
+    <!--property对应的java bean-->
+    <resultMap id="_emplazy" type="Emp">
+        <id property="empno" column="empno"/>
+        <result property="ename" column="ename"/>
+        <result property="job" column="job"/>
+        <result property="mgr" column="mgr"/>
+        <result property="hiredate" column="hiredate"/>
+        <result property="sal" column="sal"/>
+        <result property="comm" column="comm"/>
+        <association property="d" column="deptno" javaType="Dept" select="getdeptsql"/>
+    </resultMap>
+    <select id="getdeptsql" resultType="Dept">
+        select *
+        from dept
+        where deptno = #{deptno}
+    </select>
+
+    <!--Dynamic SQL, for conditional query-->
+    <select id="getEmpByConditions" resultType="Emp">
+        select * from emp
+        <where>
+            <if test="empno!=0">
+                and empno = #{empno}
+            </if>
+            <if test="ename!=null">
+                and ename = #{ename}
+            </if>
+            <if test="job!=null">
+                and job = #{job}
+            </if>
+        </where>
+    </select>
+
+    <!--Dynamic SQL 2-->
+    <select id="getEmpByOneCondition" resultType="Emp">
+        select * from emp
+        <choose>
+            <when test="empno!=0">
+                and empno=#{empno}
+            </when>
+            <when test="ename!=null">
+                and ename=#{ename}
+            </when>
+            <when test="job!=0">
+                and job=#{job}
+            </when>
+        </choose>
+    </select>
+    
+    <update id="updategetEmpByCondition">
+        update emp
+        <set>
+            <if test="ename!=null">
+              ename = #{ename}
+            </if>
+            <if test="job!=null">
+              job = #{job}
+            </if>
+        </set>
+        where empno = #{empno}
+    </update>
+
+
+    <!--展示这种dynamic sql in (7633,7889,7900)-->
+    <!--使用了foreach 来遍历传入的 array 或者是 list-->
+    <select id="getEmps" resultType="Emp">
+      select * from emp where empno in
+      <foreach collection="list" item="item" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+    </select>
+
+    <select id="getEmps2" resultType="Emp">
+        select * from emp where empno in
+        <foreach collection="array" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getEmpByPage" resultType="Emp">
+        select * from emp limit #{index},#{count}
+    </select>
+</mapper>

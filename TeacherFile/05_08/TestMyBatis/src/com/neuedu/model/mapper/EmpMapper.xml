@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neuedu.model.mapper.EmpMapper">
+ 
+ <insert id="addEmp" useGeneratedKeys="true"
+    keyProperty="empno">
+    insert into emp values(null,#{ename},#{job},#{mgr},#{hiredate},#{sal},#{comm},#{deptno})
+ </insert>
+ 
+ <insert id="addEmp2" useGeneratedKeys="true"
+    keyProperty="empno">
+    insert into emp values(null,#{ename},#{job},#{mgr},#{hiredate},#{sal},#{comm},#{deptno})
+ </insert>
+ 
+ <update id="updateEmp">
+     update emp set sal = #{sal}, comm=#{comm} where empno = #{empno}
+ </update>
+ 
+ <sql id="fromemp">
+      from emp where empno = #{empno}
+ </sql>
+ 
+ <delete id="deleteEmp">
+    delete 
+    <include refid="fromemp"></include>
+ </delete>
+ 
+ <select id="getJobByEmpno" resultType="string">
+    select job
+    <include refid="fromemp"></include> 
+ </select>
+ 
+ <select id="getInfoByEmpno" resultType="hashmap">
+    select ename, job 
+    <include refid="fromemp"></include>
+ </select>
+ 
+ <!-- select * from emp where ? = ? -->
+ <!-- ${} string substitution-->
+ <!-- don't write like '${value}', SQL injection-->
+ <select id="FindByColumn" resultType="Emp">
+   select * from emp where ${column} = #{value}
+ </select>
+ 
+ 
+ <select id="getInfos" resultType="hashmap">
+    select e.*, d.dname, d.loc
+from emp e, dept d
+where e.deptno = d.deptno
+ </select>
+ 
+ <select id="getEmpInfoByEmpno" resultMap="_emp">
+       select *
+from emp e, dept d
+where e.deptno = d.deptno
+and e.empno = #{empno}
+ </select>
+ 
+ <resultMap type="Emp" id="_emp">
+     <id property="empno" column="empno" />
+     <result property="ename" column="ename"/>
+     <result property="ename" column="ename"/>
+     <result property="job" column="job"/>
+     <result property="mgr" column="mgr"/>
+     <result property="hiredate" column="hiredate"/>
+     <result property="sal" column="sal"/>
+     <result property="comm" column="comm"/>
+     <association property="d" javaType="Dept">
+         <id property="deptno" column="deptno"/>
+         <result property="dname" column="dname"/>
+         <result property="loc" column="loc"/>
+     </association>
+ </resultMap>
+  
+</mapper>
