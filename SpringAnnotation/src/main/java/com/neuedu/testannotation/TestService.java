@@ -1,7 +1,14 @@
 package com.neuedu.testannotation;
 
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class TestService {
+    @Autowired
+    private TestDAO testDAO;
+
+    public void outPutCollaborate(){
+        System.out.println(testDAO);
+    }
 }

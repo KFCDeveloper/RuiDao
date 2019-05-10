@@ -11,7 +11,8 @@ public class TestAnnotation {
         //2.get Bean
         //2. get Bean
         TestController bean = context.getBean(TestController.class);
-
-        System.out.println(bean);
+//        TestController bean = (TestController) context.getBean("testController");
+//        System.out.println(bean);
+        bean.outPutCollaborators();
     }
 }
