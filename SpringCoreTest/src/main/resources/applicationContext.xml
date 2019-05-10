@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     <!-- bean refers to Class which expect Spring to create instance, manage their dependencies -->
 
@@ -36,8 +37,32 @@
     <bean id="testBean2" factory-bean="testBean2Factory" factory-method="getInstance" scope="prototype"/>
 
 
-    <bean id="exampleBean" class="com.neuedu.springtestcore.ExampleBean">
-        <constructor-arg name="years" value="750000000" />
-        <constructor-arg name="ultimateAnswer" value="42" />
+    <!--<bean id="exampleBean" class="com.neuedu.springtestcore.ExampleBean">-->
+        <!--<constructor-arg name="years" value="750000000" />-->
+        <!--<constructor-arg name="ultimateAnswer" value="42" />-->
+    <!--</bean>-->
+    <bean id="exampleBean" class="com.neuedu.springtestcore.ExampleBean" p:years="750000000" p:ultimateAnswer="42">
+        <property name="list">
+            <list>
+                <value>str1</value>
+                <value>str2</value>
+                <value>str3</value>
+            </list>
+        </property>
+        <property name="set">
+            <list>
+                <value>str1</value>
+                <value>str2</value>
+                <value>str3</value>
+            </list>
+        </property>
+        <property name="map">
+            <map>
+                <entry key="an enrty" value="just some string" />
+                <entry key="a ref" value="myDataSource" />
+                <!--如果是value-ref 就是指向一个已经注册的bean-->
+                <!--<entry key="a ref" value-ref="testBean2" />-->
+            </map>
+        </property>
     </bean>
 </beans>
