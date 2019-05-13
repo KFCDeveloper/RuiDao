@@ -10,7 +10,7 @@ public class TestController {
     //Spring will have a rule to find matching dependencies, first find by Type,if it find
     //more matches(in this case,TestService could be interface, or a super class),then find by name
     @Autowired
-    private TestService testService;
+    private TestServiceVice testService;
 
 
     public void outPutCollaborators() {

@@ -4,5 +4,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EmpService {
-    public
+    public void addEmp(){
+        //business logic
+        System.out.println("add a emp");
+    }
+
+    public void deleteEmp(){
+        //business logic
+        System.out.println("delete a emp");
+    }
+    public void updateEmp(){
+        //business logic
+        System.out.println("update a emp");
+    }
 }
