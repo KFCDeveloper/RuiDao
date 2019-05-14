@@ -67,14 +67,10 @@ public class AccountService {
         }
     }
 
-    public void transferMoneyAspect(){
-        try {
-            dao.deductMoney();
-            dao.addMoney();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    //这里一定要向上抛出异常，抛给框架，不能自己把异常catch了，这样框架看起来你就没有异常
+    public void transferMoneyAspect() throws SQLException {
+        dao.deductMoney();
+        dao.addMoney();
     }
 
     public static void main(String[] args) {
@@ -83,7 +79,11 @@ public class AccountService {
 
 //        service.transferMoney();
 
-        service.transferMoneyAspect();
+        try {
+            service.transferMoneyAspect();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 }
