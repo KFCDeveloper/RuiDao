@@ -4,7 +4,7 @@ import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 
 @Component
-@Aspect
+//@Aspect
 public class LogAsPect {
 
     //aspectJ weaving syntax
@@ -20,7 +20,9 @@ public class LogAsPect {
      * pointcut(切入点): specifies which methods the advice should be weaved
      * weaving(织入): the behavior of cutting into other methods
      */
-    @Before("execution(* com.neuedu.model.service.*.*(..))")
+
+
+    /*@Before("execution(* com.neuedu.model.service.*.*(..))")
     public void before() {
         //before the method executes
         System.out.println("methods before");
@@ -38,6 +40,24 @@ public class LogAsPect {
     }
 
     @AfterReturning("execution(* com.neuedu.model.service.*.*(..))")
+    public void afterReturning() {
+        System.out.println("methods returning");
+    }*/
+
+    public void before() {
+        //before the method executes
+        System.out.println("methods before");
+    }
+
+    public void after() {
+        //after the method executes;
+        System.out.println("methods after");
+    }
+
+    public void afterThrowing() {
+        System.out.println("methods exception");
+    }
+
     public void afterReturning() {
         System.out.println("methods returning");
     }
