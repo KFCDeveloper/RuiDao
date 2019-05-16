@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <!--http://localhost:8080/testmvc/html/register/register.html-->
+    <!--http://localhost:8080/testmvc/test/register-->
+
+    <!--in terms of fileupload, the form must the following 2 rules:
+    1.method = post
+    2.enctype = multipart/form-data
+
+    enctype="application/x-www-form-urlencoded":username+?password=?
+    enctype enctype = multipart/form-data: form submit in binary format
+    -->
+
+    <form action="../test/register" method="post">
+        <input type="text" name="username" >
+        <input type="password" name="password">
+        <button type="submit">register</button>
+    </form>
+
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--
+    full path: http://localhost:8080/testmvc/login
+
+    relative path:
+        current url:http://localhost:8080/testmvc/html/login.html
+        target url:http://localhost:8080/testmvc/login
+
+        action"../login"
+
+        current url:http://localhost:8080/testmv/login.html
+        target url:http://localhost:8080/testmvc/login
+
+        action"./login"
+        targe-->
+    <form action="http://localhost:8080/SpringMVCTest_Web_exploded/loginPage" method="post">
+        <label>
+            <input type="text" name="username" />
+        </label>
+        <label>
+            <input type="password" name="password"/>
+        </label>
+        <button type="submit">sigin</button>
+    </form>
+</body>
+</html>

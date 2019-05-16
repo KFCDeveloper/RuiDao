@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        https://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        https://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <context:annotation-config/>
+
+    <!--to enable AOP aspect weave-->
+    <aop:aspectj-autoproxy/>
+    <!--specify where beans locate-->
+    <context:component-scan base-package="com.neuedu.model.service"/>
+    <context:component-scan base-package="com.neuedu.model.mapper"/>
+
+    <!--第三方的数据库连接池 企业也用的-->
+    <!--这个用的是数据库连接池，如果不用连接池，就会花很多时间和数据库连接，然后最后还要关闭数据库连接-->
+    <!--主要是数据库的连接数是有限的，如果连接得太多了，数据库会处于一种不想给连接的状态，和数据库的性能有关-->
+    <!--使用数据库连接池，当你要用的时候从连接池中拿出来，然后不用了再放回去-->
+    <!--hibernate和mybatis的自带的数据库连接不好，官方都认为只是拿来玩一玩的，官方spring都推荐dbcp2的连接池，这个要强大-->
+    <!--connection pool: 1) reduce the communication with database, program has higher performance-->
+    <!--2) each database has limit of connection numbers,database could be unresponsive if too many connections at the same time
+            by using a connection pool, if there is no available connections, program will wait in line-->
+
+    <!-- connect spring with mybatis -->
+    <!-- configure datasource -->
+    <bean id="ds" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/scott"/>
+        <property name="username" value="root"/>
+        <property name="password" value=""/>
+    </bean>
+
+    <!-- configure MyBatis sessionFactory -->
+    <!--和之前纯粹的MyBatis创建的工厂是不一样的，这是Spring集成下的，做过一些手脚-->
+    <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 加载mybatis的主配置文件 -->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <!-- 注入数据源 -->
+        <property name="dataSource" ref="ds"/>
+    </bean>
+
+    <!-- tell Spring about Mapper information -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 指定扫描的包名
+        如果扫描多个包，每个包中间使用半角逗号分隔
+        -->
+        <property name="basePackage" value="com.neuedu.model.mapper"/>
+        <!-- 自动创建session（connection）去数据库交互 -->
+        <property name="sqlSessionFactoryBeanName" value="sessionFactory"/>
+    </bean>
+
+
+    <!--configure Spring transaction manager which is a advisor-->
+    <!-- 配置事务管理器-->
+    <bean id="txm" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="ds" />
+    </bean>
+
+    <!--开启事务-->
+    <!-- if we want to use annotation to control transaction -->
+    <tx:annotation-driven transaction-manager="txm"/>
+</beans>
