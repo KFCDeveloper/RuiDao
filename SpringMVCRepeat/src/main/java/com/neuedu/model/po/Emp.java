@@ -53,5 +53,17 @@ public class Emp {
     /*
         1. define hiredate as Date, in page, we need to use java or javascript to format it
         2. define two field, hiredate->Date used to database, hiredatestr->String used
+
      */
+
+    @Override
+    public String toString() {
+        return "Emp{" +
+                "empno=" + empno +
+                ", ename='" + ename + '\'' +
+                ", job='" + job + '\'' +
+                ", hiredate=" + hiredate +
+                ", hiredatestr='" + hiredatestr + '\'' +
+                '}';
+    }
 }

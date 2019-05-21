@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <input type="text" v-model="info"/>
+    <button @click="send">send</button>
+
+</div>
+</body>
+<script>
+    /*
+        by default, brower does not allow you to send a ajax to different domain(same domain mean)
+
+
+        to solve this problems:
+            1. set header on server-> CORS  选择那些ip可以请求
+            2.
+               2.1 write java source to send http request to get the data, and return to ajax(not recommended)
+               2.2 use nginx to set proxy, vue-cli
+            3. jsonp(script可以跨域+调用回调函数)-> jquery
+    * */
+    var app = new Vue({
+        el:"#app",
+        data:{
+            info:''
+        },
+        methods:{
+
+        }
+    })
+</script>
+</html>
