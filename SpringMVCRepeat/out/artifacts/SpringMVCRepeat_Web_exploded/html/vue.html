@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+    <style>
+        .div1 {
+            width: 100px;
+            height: 100px;
+            border: 1px solid red;
+        }
+
+        .bgred {
+            background-color: red;
+        }
+
+    </style>
+</head>
+<body>
+<!--int vue.js, if you want to change the DOM, you change the data of vue instance-->
+<div id="app">
+    {{message}}
+</div>
+
+<div id="app-2">
+  <span v-bind:title="message">
+    鼠标悬停几秒钟查看此处动态绑定的提示信息！
+  </span>
+</div>
+
+<div id="app-3">
+    <span v-if="seen">Now you see me</span>
+</div>
+
+<div id="app-4">
+    <ol>
+        <li v-for="todo in todos">
+            {{ todo.text }}
+        </li>
+    </ol>
+    <table>
+        <tr v-for="user in users">
+            <td>{{user.username}}</td>
+            <td>{{user.age}}</td>
+        </tr>
+    </table>
+</div>
+
+<div id="app-7">
+    <input v-bind:value="username" v-on:blur="checkUserName"/><span>{{msg}}</span>
+</div>
+<div id="app-8">
+    <div class="div1" v-bind:class="{bgred:isActive}" v-on:click="changebg">
+
+    </div>
+</div>
+<div id="example">
+    <p>Original message: "{{ message }}"</p>
+    <p>Computed reversed message: "{{ reversedMessage }}"</p>
+
+    <input v-model="firstname"/>
+    <input v-model="lastname"/>
+    {{fullname}}
+</div>
+<div id="app-9">
+    <input v-model="username"/><span v-show="seen">username should be more than 6 letters</span>
+</div>
+<script>
+
+    var app9 = new Vue({
+        el: '#app-9',
+        data: {
+            username: '',
+            seen: true
+        },
+        watch: {
+            username: function () {
+                if (this.username.length >= 6) {
+                    this.seen = false;
+                } else {
+                    this.seen = true;
+                }
+
+            }
+
+        }
+    });
+
+    var example = new Vue({
+        el: '#example',
+        data: {
+            message: 'Hello Vue!',
+            firstname: '',
+            lastname: '',
+            fullname: ''
+        },
+        computed: {
+            reversedMessage: function () {
+                //the function will be invoked each time message is changed
+                return this.message.split('').reverse().join('');
+            }/* ,
+					  fullname:function()
+					  {
+						  return this.firstname+" "+this.lastname;
+					  } */
+        },
+        /*  methods:
+             {
+                 getFullName:function()
+                 {
+                     return this.firstname+" "+this.lastname;
+                 }
+             }, */
+
+        watch: {
+            firstname: function (val) {
+                this.fullname = val + " " + this.lastname;
+            },
+            lastname: function (val) {
+                this.fullname = this.firstname + " " + val;
+            }
+        }
+    });
+
+
+    var app8 = new Vue({
+        el: "#app-8",
+        data: {
+            isActive: false
+        },
+        methods: {
+            changebg: function () {
+                //toggle bgred
+                this.isActive = !this.isActive;
+            }
+        }
+    });
+
+    var app7 = new Vue({
+        el: "#app-7",
+        data: {
+            username: '',
+            msg: ''
+        },
+        methods: {
+            checkUserName: function () {
+                console.log(this.username.length);
+                //check the length of username
+                if (this.username.length < 6) {
+                    this.msg = "username should not be less than 6 letters";
+                } else {
+                    this.msg = "";
+                }
+            }
+        }
+    });
+    new Vue({
+        el: "#app",
+        data: {
+            message: 'Hello World'
+        }
+    });
+
+    var app2 = new Vue({
+        el: '#app-2',
+        data: {
+            message: '页面加载于 ' + new Date().toLocaleString()
+        }
+    });
+
+    var app3 = new Vue({
+        el: '#app-3',
+        data: {
+            seen: false
+        }
+    });
+
+    var app4 = new Vue({
+        el: '#app-4',
+        data: {
+            todos: [
+                {text: 'Learn JavaScript'},
+                {text: 'Learn Vue'},
+                {text: 'Build something awesome'}
+            ],
+            users: [
+                {username: "feiyy", age: 38},
+                {username: "james", age: 30},
+                {username: "lily", age: 25}
+            ]
+        }
+    });
+
+</script>
+</body>
+</html>
